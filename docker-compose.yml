@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  api:
+    image: api_calls
+    build: .
+    depends_on:
+      - db
+    volumes:
+      - api_data:/usr/app/
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/api_calls
+    ports:
+      - "8000:8000"
+    networks:
+      - api_network
+
+  db:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5430:5432"
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=api_calls
+    networks:
+      - api_network
+
+volumes:
+  api_data:
+  postgres_data:
+
+networks:
+  api_network:
