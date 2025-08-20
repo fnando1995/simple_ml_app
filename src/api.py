@@ -26,17 +26,18 @@ def test():
     """
     return {"message": "Hello World, this is a test!"}
 
-@app.post("/getall")
+@app.get("/getall")
 def get_all_preds(db=Depends(db)):
     """
-    Endpoint to get all the predictions in the 
+    Endpoint to get all the predictions in the
     database as a list.
     """
     preds = get_predictions(db)
     if preds:
         return preds
     else:
-        raise HTTPException(status_code=200, detail='No preds found in the database.')
+        # Return a 404 status code when no predictions are found
+        raise HTTPException(status_code=404, detail='No preds found in the database.')
 
 @app.post("/predict")
 def predict_segment(data: CustomerData,db = Depends(db)):
